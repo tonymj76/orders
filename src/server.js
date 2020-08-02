@@ -14,6 +14,10 @@ let subscriptionsRoute = require('./routes/subscriptions');
 const port = process.env.PORT || 5000
 
 
+router.get('/', (req,res) => {
+    res.send('Welcome to Only Errand')
+})
+
 app.use(cors())
 app.use(express.json())
 app.use(userRoute)
@@ -23,9 +27,7 @@ app.use(serviceTypes)
 app.use(servicePrices)
 app.use(ordersRoute)
 
-router.get('/', (req,res) => {
-    res.send('Welcome to Only Errand')
-})
+
 
 
 app.use((req, res, next) => {
