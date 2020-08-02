@@ -60,51 +60,6 @@ exports.getOrderById = async(req,res) => {
     order.ordersServices = data;
     res.send(order);
 
-    // let orderServicesBuild = order.orderServices.map(async(service) => {
-    //     let servicetypes = await servicesTypesModel.findById(service.servicetype)
-    //     await servicetypes.populate('service').execPopulate()
-    //     await servicetypes.populate('price').execPopulate()
-    //     return servicetypes
-    // })
-
-    // let response = await Promise.all(orderServicesBuild);
-    // console.log(response)
-    // response.forEach((service) => {
-    //     let found = data.find(element => element.name === service.service.name )
-    //     if(found){
-    //        found.serviceTypes.push({
-    //            quantity: service.quantity,
-    //            id: service._id,
-    //            name: service.name,
-    //            price: service.price[0].price,
-    //        }) 
-    //        return
-    //     }
-    //     data.push({
-    //         id: service.service._id,
-    //         name: service.service.name,
-    //         createdAt: service.service.createdAt,
-    //         serviceTypes: [
-    //             {
-    //                 quantity: service.quantity,
-    //                 id: service._id,
-    //                 name: service.name,
-    //                 price: service.price[0].price,
-    //             }
-    //         ]
-    //     })
-    // })
-
-    // let orderObject = {
-    //     id: order._id,
-    //     subTotal: order.subTotal,
-    //     grandTotal: order.grandTotal,
-    //     status: order.status,
-    //     date: order.createdAt,
-    //     services: data
-    // }
-
-    // res.send(orderObject)
 }
 
 
@@ -112,6 +67,18 @@ exports.getOrders = async(req, res) => {
     let user = req.user._id
 
     let orders = await ordersModel.find({user:user})
-    res.send(orders)
+    let completed = await ordersModel.find({status:'completed'})
+    let pending = await ordersModel.find({status:'pending'})
+    let inProgress = await ordersModel.find({status:'progress'})
+
+    res.send({
+        success:true,
+        data:orders,
+        count: {
+            completed: completed.length,
+            pending: pending.length,
+            inProgress: inProgress.length
+        }
+    })
 }
 

@@ -9,6 +9,7 @@ let serviceTypes = require('./routes/services.types')
 let servicePrices = require('./routes/services.types.prices')
 let ordersRoute = require('./routes/orders')
 let subscriptionsRoute = require('./routes/subscriptions');
+const moment = require('moment')
 
 
 const port = process.env.PORT || 5000
@@ -51,3 +52,9 @@ app.listen(port, (err) => {
 }) 
 
 
+let x = '2020-07-14T17:00:00.000Z'
+
+let date = x.split('T')[0]
+let time = x.split('T')[1].slice(0,5)
+
+console.log(time)
