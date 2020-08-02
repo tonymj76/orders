@@ -4,23 +4,28 @@ const config = require('../../config');
 
 //register User
 exports.register = async(req, res) => {
-    if(!req.body){
-        res.status(400).send('All values are required!')
+    if(!Object.keys(req.body).length){
+        res.status(422).send('All values are required!')
     }
-    let { name, email, password, phone} = req.body
+    let { fullName , email, password, phone} = req.body
     Object.keys(req.body).map(field => {
         if(!req.body[field]){
-            return res.status(422).send(`${field} field  is required`)
+            return res.status(422).send({
+                success: false,
+                message:`${field} field  is required`})
         }
     })
     
     email = email.toLowerCase()
 
     let Email = await userModel.find({email})
-    if(Email.length) return res.status(404).send("Email already exists")
+    if(Email.length) return res.status(400).send({
+        success: false,
+        message: "The email already exists"
+    })
 
     let model = new userModel()
-    model.name = name
+    model.name = fullName
     model.email = email
     model.phone = phone
     model.password = model.generateHash(password)
@@ -35,7 +40,14 @@ exports.register = async(req, res) => {
         userObject['email'] = doc.email
         userObject['createdAt'] = doc.createdAt
         userObject['phone'] = doc.phone
-        res.status(200).send(userObject)
+        var Token = jwt.sign({ id: doc._id }, config.secret, {
+            expiresIn: 86400 // expires in 24 hours
+        });
+        res.status(200).send({
+            success: true,
+            data: userObject,
+            authorization: {token:Token}
+        })
     })
     .catch(error => {
         if(error){
@@ -47,24 +59,36 @@ exports.register = async(req, res) => {
 //login User
 exports.login = (req, res) => { 
     if(!req.body){
-        res.status(400).send('All values are required!')
+        res.status(422).send({
+            success: false,
+            message: 'All values are required!'
+        })
     }
     let { email, password} = req.body
     Object.keys(req.body).map(field => {
         if(!req.body[field]){
-            return res.status(422).send(`${field} field  is required`)
+            return res.status(422).send({
+                success:false,
+                message:`${field} field  is required`})
         }
     })
     
     userModel.findOne({email:email})
     .then(response =>{
         if(!response){
-            res.status(404).send('This email does not exist')
+            res.status(400).send({
+                success:false,
+                message: 'This email does not exist'
+            })
         }
         else {
             let model = new userModel
             let validPassword = model.validPassword(password, response.password)
-            if(!validPassword){  return res.status(400).send('The password is incorrect')}
+            if(!validPassword){  return res.status(422).send({
+                success:false,
+                message:'The password is incorrect'}
+            )}
+
             var Token = jwt.sign({ id: response._id }, config.secret, {
                 expiresIn: 86400 // expires in 24 hours
             });

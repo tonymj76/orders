@@ -21,6 +21,12 @@ let orderSchema = new mongoose.Schema({
     referenceId: {
         type: String,
     },
+    scheduleDate: {
+        type: Date,
+    },
+    address: {
+        type: String
+    },
     createdAt: {
         type: Date,
         default: Date.now()

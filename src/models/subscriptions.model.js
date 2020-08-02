@@ -24,6 +24,7 @@ let subscriptionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     }
+
 })
 
 subscriptionSchema.set('toObject', {virtuals: true})

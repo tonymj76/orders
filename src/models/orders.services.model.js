@@ -21,16 +21,10 @@ let orderServicesSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    recurringDay: {
-        type: String
-    },
-    scheduleDate: {
-        type: Date,
-    },
-    scheduleTime: {
-        type: Date,
-    },
-    timestamp: Date
+    status: {
+        type: Number, //0 - pending, 1 - ongoing , 2 - delivered
+        default: 0
+    }
 })
 
 module.exports = mongoose.model('orders.services', orderServicesSchema)

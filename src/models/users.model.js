@@ -19,9 +19,6 @@ let userSchema = new mongoose.Schema({
     phone: {
         type: Number,
     },
-    subscriptionBalance: {
-        type: []
-    },
     createdAt: {
         type: Date,
         default: Date.now()

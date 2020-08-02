@@ -7,12 +7,19 @@ module.exports = function (req, res, next){
     
     const token = req.headers.authorization.split(' ')[1];
 
-    if(!token) return res.status(401).send('Access Denied!')
+    if(!token) {
+            return res.status(401).send({
+            success: false,
+            message:'unauthorized access'
+        })
+    }
 
     try {
         jwt.verify(token, config.secret, function (err, decoded){
             if(err){
-                return res.status(401).send('unauthorized access')
+                return res.status(401).send({
+                    success: false,
+                    message:'unauthorized access'})
             }
 
             req.userId = decoded.id;
@@ -26,6 +33,6 @@ module.exports = function (req, res, next){
         })
     }
     catch {
-        return res.status(401).send('Invalid token')
+        return res.status(401).send({success: false,message:'unauthorized access'})
     }
 }

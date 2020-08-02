@@ -4,12 +4,14 @@ const servicesTypesModel = require('../models/services.types.model');
 
 // create new order
 exports.createOrder = async(req, res) => {
-    let user = req.user._id
-    let { services} = req.body;
+    let user = req.userId
+    let { services, scheduleDate , address, area } = req.body;
     let subTotal = services.reduce((acc, total) => {
         return acc + total.price * total.quantity
     },0)
-    let total = subTotal
+
+
+    let total = ((7.5/ 100) * subTotal) + subTotal + 500
 
     let orders = new ordersModel();
     
@@ -17,6 +19,8 @@ exports.createOrder = async(req, res) => {
     orders.user = user;
     orders.subTotal = subTotal;
     orders.grandTotal = total;
+    orders.scheduleDate = scheduleDate
+    orders.address = address + ' ' +  area
 
     let doc = await orders.save()
     
@@ -28,12 +32,14 @@ exports.createOrder = async(req, res) => {
             ordersService.service = service.service
             ordersService.price = service.price,
             ordersService.quantity = service.quantity
-            ordersService.scheduleDate = service.scheduleDate
             ordersService.save();
         })
     }
 
-    res.status(200).send('Your order has been completed')
+    res.status(200).send({
+        success: true,
+        message:'Your order has been completed'
+    })
 }
 
 // get single order by id
