@@ -66,10 +66,12 @@ exports.getOrderById = async(req,res) => {
 exports.getOrders = async(req, res) => {
     let user = req.user._id
 
-    let orders = await ordersModel.find({user:user})
-    let completed = await ordersModel.find({status:'completed'})
-    let pending = await ordersModel.find({status:'pending'})
-    let inProgress = await ordersModel.find({status:'progress'})
+    let orders = await ordersModel.find({user:user});
+    let completed = await ordersModel.find({user:user ,status:'completed'});
+    let pending = await ordersModel.find({user:user , status:'pending'});
+    let inProgress = await ordersModel.find({user:user , status:'progress'});
+
+    console.log(completed)
 
     res.status(200).send({
         success:true,
