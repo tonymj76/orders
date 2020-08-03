@@ -71,7 +71,7 @@ exports.getOrders = async(req, res) => {
     let pending = await ordersModel.find({status:'pending'})
     let inProgress = await ordersModel.find({status:'progress'})
 
-    res.send({
+    res.status(200).send({
         success:true,
         data:orders,
         count: {
