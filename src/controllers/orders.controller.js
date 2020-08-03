@@ -58,7 +58,10 @@ exports.getOrderById = async(req,res) => {
     let data = await Promise.all(response)
 
     order.ordersServices = data;
-    res.send(order);
+    res.send({
+        success:true,
+        data:order
+    });
 
 }
 
@@ -71,7 +74,7 @@ exports.getOrders = async(req, res) => {
     let pending = await ordersModel.find({user:user , status:'pending'});
     let inProgress = await ordersModel.find({user:user , status:'progress'});
 
-    console.log(completed)
+
 
     res.status(200).send({
         success:true,
