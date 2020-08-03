@@ -22,7 +22,7 @@ module.exports = function (req, res, next){
                     message:'unauthorized access'})
             }
 
-            console.log(decoded)
+           
             req.userId = decoded.id;
             
             userModel.findOne({_id:decoded.id})
